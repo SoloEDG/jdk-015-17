@@ -494,6 +494,110 @@ input[type="checkbox"] {
   font: 8px "Space Grotesk";
   letter-spacing: 1px;
   color: #777184;
+  text-align: right;
+  pointer-events: none;
+}
+.quality-hud {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 5px;
+  max-width: 62%;
+}
+.quality-line {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.quality-main {
+  white-space: nowrap;
+}
+.quality-badge {
+  padding: 2px 6px;
+  border-radius: 3px;
+  font-size: 8px;
+  letter-spacing: 0.8px;
+  border: 1px solid #4b3d63;
+  color: #d4c8ff;
+  background: #24202fcc;
+}
+.quality-badge.rec {
+  border-color: #7a3d4b;
+  color: #ffc7d2;
+  background: #3a2229cc;
+}
+.quality-reasons {
+  list-style: none;
+  margin: 0;
+  padding: 7px 9px;
+  border: 1px solid #34303e;
+  border-radius: 5px;
+  background: #101117d9;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  pointer-events: auto;
+}
+.quality-reasons li {
+  font-size: 9px;
+  letter-spacing: 0.4px;
+  color: #a9a3bd;
+  white-space: nowrap;
+}
+.size-options {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 6px;
+  margin-bottom: 12px;
+}
+.size-option {
+  padding: 9px 4px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  background: #17171f;
+}
+.size-option b {
+  font: 10px "Space Grotesk";
+  font-weight: 500;
+  color: #8c8d9d;
+}
+.size-option small {
+  font-size: 8px;
+}
+.size-option.selected {
+  background: #2d273c;
+  border-color: #6f5e9d;
+}
+.size-option.selected b {
+  color: #ccbbf7;
+}
+.feasibility {
+  font-size: 10px;
+  line-height: 1.6;
+  color: #8f9b92;
+  margin-bottom: 10px;
+}
+.feasibility.warn {
+  color: #e0c08a;
+}
+.alternatives {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin: -4px 0 12px;
+}
+.alternatives small {
+  font-size: 9px;
+}
+.alt-button {
+  padding: 5px 9px;
+  font-size: 9px;
+  background: #24202f;
+  border-color: #4b3d63;
+  color: #ccbbf7;
 }
 .signal-meter {
   height: 36px;
@@ -877,6 +981,9 @@ footer i {
     font-size: 16px;
   }
   .canvas-resolution {
+    display: none;
+  }
+  .quality-reasons {
     display: none;
   }
   .brand > span {

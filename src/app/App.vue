@@ -9,8 +9,15 @@ import {
   ArrowUpRight,
 } from "lucide-vue-next";
 import { createDocument } from "../shared/document";
+import type { RecordSize } from "../shared/types";
 import { createAudio, AudioPanel } from "../features/audio";
-import { StageCanvas, ThemePanel } from "../features/visuals";
+import {
+  StageCanvas,
+  ThemePanel,
+  QualityHud,
+  type QualityMonitor,
+  type StageRenderer,
+} from "../features/visuals";
 import { createScenes, ScenePanel, SceneStrip } from "../features/scenes";
 import {
   createControls,
@@ -24,8 +31,9 @@ const doc = createDocument(),
   scenes = createScenes(doc),
   controls = createControls(doc),
   recorder = createRecorder();
-const canvas = ref<HTMLCanvasElement>(),
-  stage = ref<HTMLElement>();
+const monitor = ref<QualityMonitor>(),
+  renderer = ref<StageRenderer>();
+const stage = ref<HTMLElement>();
 const fullError = ref("");
 const unbind = bindShortcuts({
   play: () => {
@@ -36,8 +44,8 @@ const unbind = bindShortcuts({
   freeze: controls.freeze,
   tap: controls.tap,
 });
-function start() {
-  if (canvas.value) recorder.start(canvas.value, audio.stream());
+function start(size: RecordSize) {
+  if (renderer.value) recorder.start(renderer.value, size, audio.stream());
 }
 async function fullscreen() {
   try {
@@ -50,6 +58,8 @@ onUnmounted(() => {
   unbind();
   audio.dispose();
   recorder.dispose();
+  monitor.value?.dispose();
+  renderer.value?.dispose();
 });
 </script>
 <template>
@@ -74,7 +84,7 @@ onUnmounted(() => {
       </div>
       <div class="project-badge">
         <Disc3 :size="18" /><span
-          >UNTITLED SESSION<small>实时音频驱动 / 720P</small></span
+          >UNTITLED SESSION<small>实时音频驱动 / 自适应画布</small></span
         >
       </div>
     </div>
@@ -101,7 +111,8 @@ onUnmounted(() => {
             <StageCanvas
               :doc="doc"
               :read="() => audio.frame.value"
-              @ready="canvas = $event"
+              @monitor="monitor = $event"
+              @renderer="renderer = $event"
             />
             <div class="stage-caption">
               <small
@@ -110,7 +121,7 @@ onUnmounted(() => {
                 }}</small
               ><span>{{ scenes.active.value.name }}</span>
             </div>
-            <span class="canvas-resolution">16:9 · 1280 × 720</span>
+            <QualityHud v-if="monitor" :monitor="monitor" class="canvas-resolution" />
           </div>
           <SignalMeter :frame="audio.frame.value" />
         </section>
@@ -124,7 +135,13 @@ onUnmounted(() => {
           :doc="doc"
           :controls="controls"
           :beat="audio.frame.value.beat"
-        /><RecordPanel :recorder="recorder" @start="start" />
+        /><RecordPanel
+          v-if="monitor && renderer"
+          :recorder="recorder"
+          :monitor="monitor"
+          :renderer="renderer"
+          @start="start"
+        />
         <div class="note">
           <Radio :size="19" />
           <p>

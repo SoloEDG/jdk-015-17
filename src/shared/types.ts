@@ -1,4 +1,22 @@
 export type SceneKind = "orbit" | "spectrum" | "wave" | "tunnel";
+export type DetailLevel = "high" | "medium" | "low";
+export interface QualityState {
+  width: number;
+  height: number;
+  cssWidth: number;
+  cssHeight: number;
+  dpr: number;
+  fps: number;
+  detail: DetailLevel;
+  fullscreen: boolean;
+  recording: boolean;
+  reasons: string[];
+}
+export interface RecordSize {
+  label: string;
+  width: number;
+  height: number;
+}
 export interface Scene {
   id: string;
   name: string;
